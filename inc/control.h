@@ -11,5 +11,7 @@ struct control
     struct control *next;
 };
 
+struct control *add_interface_to_ctrl_list(struct control *phead, struct control *control_interface);
+
 
 #endif

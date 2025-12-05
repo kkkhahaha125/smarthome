@@ -96,7 +96,21 @@ static void *voice_get(void *arg)
 //语音播报
 static void *voice_set(void *arg)
 {
+    unsigned char *buffer = (unsigned char *)arg;
 
+    if(-1 == serial_fd){
+        voice_init();
+        if(-1 == serial_fd){
+            printf("%s|%s|%d: open serial failed\n", __FILE__, __func__, __LINE__);
+            pthread_exit(0);
+        }
+    }
+
+    if(NULL != buffer){
+        serialPutString(serial_fd, buffer, 0);
+    }
+
+    return;
     
 }
 struct control voice_control = {
@@ -111,15 +125,5 @@ struct control voice_control = {
 
 struct control *add_voice_to_ctrl_list(struct control *phead)
 {
-    //头插法加入新节点进入链表
-    if(NULL == phead){
-        phead = &voice_control;
-    }else{
-        voice_control.next = phead;
-        phead = &voice_control;
-
-    }
-
-    return phead;
-
+    return add_interface_to_ctrl_list(phead, &voice_control);
 }

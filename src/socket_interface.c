@@ -54,7 +54,7 @@ void *dealWithClient(void *arg){
     while(1){
         memset(readBuffer, 0, sizeof(readBuffer));
         n_read = recv(c_fd, readBuffer, sizeof(readBuffer), 0);
-        printf("%s|%s|%d,len: %ld,recv: %02X %02X %02X %02X %02X %02X\n", __FILE__, __func__, __LINE__, n_read, readBuffer[0], readBuffer[1], readBuffer[2], readBuffer[3], readBuffer[4], readBuffer[5]);
+        printf("%s|%s|%d,len: %d,recv: %02X %02X %02X %02X %02X %02X\n", __FILE__, __func__, __LINE__, n_read, readBuffer[0], readBuffer[1], readBuffer[2], readBuffer[3], readBuffer[4], readBuffer[5]);
         if(n_read > 0){
 
             if(readBuffer[0] == 0xAA && readBuffer[1] == 0x55 &&
@@ -177,15 +177,5 @@ struct control tcpsocket_control = {
 
 struct control *add_tcpsocket_to_ctrl_list(struct control *phead)
 {
-    //头插法加入新节点进入链表
-    if(NULL == phead){
-        phead = &tcpsocket_control;
-    }else{
-        tcpsocket_control.next = phead;
-        phead = &tcpsocket_control;
-
-    }
-
-    return phead;
-
+    return add_interface_to_ctrl_list(phead, &tcpsocket_control);
 }

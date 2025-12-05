@@ -3,6 +3,7 @@
 #include <wiringPi.h>
 #include "voice_interface.h"
 #include "socket_interface.h"
+#include "smoke_interface.h"
 #include "msg_queue.h"
 #include "control.h"
 #include "global.h"
@@ -40,7 +41,7 @@ int main(int argc, char **argv)
 
     ctrl_info->ctrl_phead = add_voice_to_ctrl_list(ctrl_info->ctrl_phead);
     ctrl_info->ctrl_phead = add_tcpsocket_to_ctrl_list(ctrl_info->ctrl_phead);
-//  ctrl_info->ctrl_phead = add_fire_to_ctrl_list(ctrl_info->ctrl_phead);
+    ctrl_info->ctrl_phead = add_smoke_to_ctrl_list(ctrl_info->ctrl_phead);
 
     control_pointer = ctrl_info->ctrl_phead;
     while(NULL != control_pointer){

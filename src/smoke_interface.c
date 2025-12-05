@@ -37,8 +37,8 @@ static void smoke_final(void)
 
 static void *smoke_get(void *arg)
 {
-    int status = HIGH;
-    int switch_status = 0;
+    int event = HIGH;
+    int status = 0;
     mqd_t mqd = -1;
     unsigned char buffer[6] = {0xAA, 0x55, 0x00, 0x00, 0x55, 0xAA};
     
@@ -50,28 +50,32 @@ static void *smoke_get(void *arg)
     }
     
     pthread_detach(pthread_self());
-  
+    printf("%s thread start\n", __func__);
     while(1)
     {
-        status = digitalRead(SMOKE_PIN);
+        event = digitalRead(SMOKE_PIN);
         //检测到烟雾，开启烟雾报警
-        if(LOW == status && 0 == switch_status){
+        if(LOW == event && 0 == status){
             buffer[2] = 0x45;
             buffer[3] = 0x01;
-            switch_status == 1;
+            status = 1;
             if(-1 == send_message(mqd, buffer, 6)){
-                switch_status = 0;
+                status = 0;
+                continue;
             }
+            printf("45 01\n");
         //检测到烟雾消失，解除烟雾报警
-        }else if(HIGH == status && 1 == switch_status){
+        }else if(HIGH == event && 1 == status){
             buffer[2] = 0x45;
             buffer[3] = 0x00;
-            switch_status == 0;
+            status = 0;
             if(-1 == send_message(mqd, buffer, 6)){
-                switch_status = 1;
+                status = 1;
+                continue;
             }
-
+            printf("45 00\n");
         }
+        sleep(5);
     }
     
 
@@ -97,15 +101,7 @@ struct control smoke_control = {
 
 struct control *add_smoke_to_ctrl_list(struct control *phead)
 {
-    //头插法加入新节点进入链表
-    if(NULL == phead){
-        phead = &smoke_control;
-    }else{
-        smoke_control.next = phead;
-        phead = &smoke_control;
-
-    }
-
-    return phead;
+    
+    return add_interface_to_ctrl_list(phead, &smoke_control);
 
 }
