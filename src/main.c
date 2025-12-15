@@ -4,6 +4,7 @@
 #include "voice_interface.h"
 #include "socket_interface.h"
 #include "smoke_interface.h"
+#include "receive_interface.h"
 #include "msg_queue.h"
 #include "control.h"
 #include "global.h"
@@ -42,6 +43,7 @@ int main(int argc, char **argv)
     ctrl_info->ctrl_phead = add_voice_to_ctrl_list(ctrl_info->ctrl_phead);
     ctrl_info->ctrl_phead = add_tcpsocket_to_ctrl_list(ctrl_info->ctrl_phead);
     ctrl_info->ctrl_phead = add_smoke_to_ctrl_list(ctrl_info->ctrl_phead);
+    ctrl_info->ctrl_phead = add_receive_to_ctrl_list(ctrl_info->ctrl_phead);
 
     control_pointer = ctrl_info->ctrl_phead;
     while(NULL != control_pointer){
@@ -64,12 +66,12 @@ int main(int argc, char **argv)
             pthread_create(&tid[i], NULL, (void *)control_pointer->get, (void *)ctrl_info);
         control_pointer = control_pointer->next;
     }
-    while(1){}
-    printf("1\n");
+
+
     for(i = 0; i < node_num; i++){
         pthread_join(tid[i], NULL);
     }
-    printf("2\n");
+
     control_pointer = ctrl_info->ctrl_phead;
     for(i = 0; i < node_num; i++){
         if(NULL != control_pointer->final){
@@ -77,9 +79,9 @@ int main(int argc, char **argv)
         }     
         control_pointer = control_pointer->next;
     }
-    printf("3\n");
+
     msg_queue_final(ctrl_info->mqd);
-    printf("4\n");
+
 
     if(NULL != tid){
         free(tid);

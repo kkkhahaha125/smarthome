@@ -112,7 +112,7 @@ double face_category(void)
     double result = 0.0;
     system(WGET_CMD);
 
-    if(0 == access(SEARCHFACE_FILE, F_OK))
+    if(0 != access(SEARCHFACE_FILE, F_OK))
     {
         return result;
     }

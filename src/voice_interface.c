@@ -46,8 +46,9 @@ static void *voice_get(void *arg)
     mqd_t mqd = -1;
     int i;
 
-    pthread_detach(pthread_self());
     
+    printf("%s thread start\n", __func__);
+
     if(-1 == serial_fd){
         voice_init();
         if(-1 == serial_fd){
@@ -98,6 +99,7 @@ static void *voice_set(void *arg)
 {
     unsigned char *buffer = (unsigned char *)arg;
 
+    pthread_detach(pthread_self());
     if(-1 == serial_fd){
         voice_init();
         if(-1 == serial_fd){
@@ -107,10 +109,10 @@ static void *voice_set(void *arg)
     }
 
     if(NULL != buffer){
-        serialPutString(serial_fd, buffer, 0);
+        serialPutString(serial_fd, buffer, 6);
     }
 
-    return;
+    pthread_exit(0);
     
 }
 struct control voice_control = {

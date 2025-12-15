@@ -22,6 +22,10 @@ int myoled_show(void *arg)
 {
 
     unsigned char *buffer = (unsigned char *)arg;
+    oled_clear(&disp);
+    if(NULL != buffer){
+        oled_putstrto(&disp, 0, 9+1, buffer);
+    }
     #if 0
     oled_putstrto(&disp, 0, 9+1, "This garbage is :");
     disp.font = font2;
@@ -80,6 +84,8 @@ int myoled_init(void) {
         return OLED_INIT_ERR_SEND_CMD; // 明确返回“初始化指令发送失败”
     }
     printf("[OLED INFO] oled_init success\n");
+    
+    oled_clear(&disp);
 
     // 4. 初始化成功，返回标识
     return OLED_INIT_SUCCESS;

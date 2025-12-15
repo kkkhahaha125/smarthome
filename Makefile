@@ -42,7 +42,7 @@ obj/%.o : src/%.c
 #链接所有目标文件和库文件
 $(TARGET) : $(OBJ)
 	$(CC) -o $@ $^ $(LDFLAGS) $(LIBS)
-
+	
 compile : $(TARGET)
 
 clean :

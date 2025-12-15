@@ -49,7 +49,7 @@ static void *smoke_get(void *arg)
         pthread_exit(0);
     }
     
-    pthread_detach(pthread_self());
+    
     printf("%s thread start\n", __func__);
     while(1)
     {
@@ -57,23 +57,23 @@ static void *smoke_get(void *arg)
         //检测到烟雾，开启烟雾报警
         if(LOW == event && 0 == status){
             buffer[2] = 0x45;
-            buffer[3] = 0x01;
+            buffer[3] = 0x00;
             status = 1;
             if(-1 == send_message(mqd, buffer, 6)){
                 status = 0;
                 continue;
             }
-            printf("45 01\n");
+          
         //检测到烟雾消失，解除烟雾报警
         }else if(HIGH == event && 1 == status){
             buffer[2] = 0x45;
-            buffer[3] = 0x00;
+            buffer[3] = 0x01;
             status = 0;
             if(-1 == send_message(mqd, buffer, 6)){
                 status = 1;
                 continue;
             }
-            printf("45 00\n");
+           
         }
         sleep(5);
     }

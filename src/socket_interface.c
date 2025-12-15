@@ -99,7 +99,7 @@ static void *tcpsocket_get(void *arg)
     int keepcnt = 3; // tcp_keepalive_probes 保活探测包的重试次数上限
     int keepintvl = 3; // tcp_keepalive_intvl 每次探测间隔5秒
 
-    pthread_detach(pthread_self());
+    
 
     //从创建线程时传进来的参数arg获取要操作的消息队列mqd
     if(NULL != arg){
@@ -118,7 +118,7 @@ static void *tcpsocket_get(void *arg)
 
     }
 
-    printf("tcpsocket_get start\n");
+    printf("%s thread start\n", __func__);
     
     while(1){
         c_fd = accept(s_fd, (struct sockaddr *)&c_addr, &clen);
